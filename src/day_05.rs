@@ -36,7 +36,19 @@ fn solve_part_1(input_strings: &Vec<String>) -> u64 {
 
 #[aoc(day5, part2)]
 fn solve_part_2(input_strings: &Vec<String>) -> u64 {
-    unimplemented!();
+    let mut nice_count = 0;
+    // Define nice string properties with regexes
+    let nice_1_regex = Regex::new(r"^.*([[:alpha:]])([[:alpha:]]).*\1\2.*$").unwrap();
+    let nice_2_regex = Regex::new(r"^.*([[:alpha:]])([[:alpha:]])\1.*$").unwrap();
+    // Check which input strings match all nice string properties
+    for candidate in input_strings {
+        // Candidate must satisfiy all properties to be a nice string
+        if !nice_1_regex.is_match(candidate).unwrap() | !nice_2_regex.is_match(candidate).unwrap() {
+            continue;
+        }
+        nice_count += 1;
+    }
+    return nice_count;
 }
 
 #[cfg(test)]
@@ -49,5 +61,12 @@ mod tests {
         let input = generate_input(&read_to_string("./input/2015/day5.txt").unwrap());
         let result = solve_part_1(&input);
         assert_eq!(255, result);
+    }
+
+    #[test]
+    fn test_d05_p2_proper() {
+        let input = generate_input(&read_to_string("./input/2015/day5.txt").unwrap());
+        let result = solve_part_2(&input);
+        assert_eq!(55, result);
     }
 }
