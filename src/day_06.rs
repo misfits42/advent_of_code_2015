@@ -94,8 +94,34 @@ fn solve_part_1(operations: &Vec<LightChangeOperation>) -> u64 {
 }
 
 #[aoc(day6, part2)]
-fn solve_part_2(operations: &Vec<LightChangeOperation>) -> u64 {
-    unimplemented!();
+fn solve_part_2(operations: &Vec<LightChangeOperation>) -> i64 {
+    // 1000x1000 grid starts with all lights having brightness of 0
+    let mut light_matrix: [[i64; 1000]; 1000] = [[0; 1000]; 1000];
+    let mut total_brightness: i64 = 0;
+    // Process each light change operation
+    for op in operations {
+        // Iterate over each light covered by the current operation
+        for y in op.top_left.1..=op.bot_right.1 {
+            for x in op.top_left.0..=op.bot_right.0 {
+                // Determine amount by which to adjust brightness of current light
+                let delta = match op.i_type {
+                    LightInstruction::TurnOn => 1,
+                    LightInstruction::TurnOff => {
+                        if light_matrix[y][x] > 0 {
+                            -1
+                        } else {
+                            0
+                        }
+                    },
+                    LightInstruction::Toggle => 2,
+                };
+                // Adjust current light and total brightness
+                light_matrix[y][x] += delta;
+                total_brightness += delta;
+            }
+        }
+    }
+    return total_brightness;
 }
 
 #[cfg(test)]
@@ -108,5 +134,18 @@ mod tests {
         let input = generate_input(&read_to_string("./input/2015/day6.txt").unwrap());
         let result = solve_part_1(&input);
         assert_eq!(377891, result);
+    }
+
+    /// NOTE: this test will overflow stack of default-size test thread (8 MiB). Need to increase
+    /// default test stack size using:
+    /// RUST_MIN_STACK=20000000 cargo test
+    #[test]
+    fn test_d06_p2_proper() {
+        println!("!!!! 01");
+        let input = generate_input(&read_to_string("./input/2015/day6.txt").unwrap());
+        println!("!!!! 02");
+        let result = solve_part_2(&input);
+        println!("!!!! 03");
+        assert_eq!(14110788, result);
     }
 }
