@@ -28,11 +28,11 @@ fn increment_alphabetic_string(input: &String) -> String {
 #[aoc(day11, part1)]
 fn solve_part_1(input: &String) -> String {
     let test = increment_alphabetic_string(input);
-
-    return test;
+    println!("{}", test);
+    unimplemented!();
 }
 
 #[aoc(day11, part2)]
-fn solve_part_2(input: &String) -> String {
+fn solve_part_2(_input: &String) -> String {
     unimplemented!();
 }
